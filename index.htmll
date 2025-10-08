@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HARSHU-CONVO — Login</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden;color:#eaf5ff;
+      background:#0b1020;position:relative;
+    }
+    :root{--bg-img:url('https://source.unsplash.com/1600x900/?aesthetic,neon,city');}
+    .background{position:fixed;inset:0;background-image:var(--bg-img);background-size:cover;background-position:center;height:100%;z-index:0;filter:contrast(1.02) saturate(1.05)}
+    .bg-overlay{position:fixed;inset:0;background:linear-gradient(180deg, rgba(3,8,23,0.5) 0%, rgba(11,16,32,0.6) 50%, rgba(59,10,82,0.45) 100%);mix-blend-mode:overlay;z-index:1}
+    .shape{position:absolute;border-radius:50%;filter:blur(48px);opacity:.32;mix-blend-mode:screen;z-index:2}
+    .shape.s1{width:640px;height:640px;left:-160px;top:-120px;background:linear-gradient(45deg,#ff6b6b,#ff9a9e)}
+    .shape.s2{width:420px;height:420px;right:-140px;bottom:-140px;background:linear-gradient(45deg,#7b61ff,#65f0d1)}
+    .card{width:380px;max-width:94vw;padding:32px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));backdrop-filter:blur(8px);box-shadow:0 14px 40px rgba(2,6,23,0.7);border:1px solid rgba(255,255,255,0.06);position:relative;z-index:6;text-align:center;color:#eaf5ff;animation:fadeIn 1s ease;}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+    h1{font-size:22px;letter-spacing:1px;margin-bottom:8px}
+    p.lead{color:rgba(230,238,248,0.88);margin-bottom:18px}
+    
+    .input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.03);
+      color:#eaf5ff;
+      margin-bottom:14px;
+      outline:none;
+      transition:all 0.3s ease;
+      box-shadow:0 0 0 rgba(123,97,255,0);
+    }
+    .input::placeholder{color:rgba(230,238,248,0.45)}
+    .input:focus{
+      border-color:#7b61ff;
+      box-shadow:0 0 12px rgba(123,97,255,0.6), 0 0 30px rgba(101,240,209,0.2);
+      transform:scale(1.02);
+      background:rgba(255,255,255,0.06);
+    }
+
+    .btn{
+      display:inline-block;
+      padding:10px 16px;
+      border-radius:12px;
+      border:none;
+      cursor:pointer;
+      font-weight:700;
+      background:linear-gradient(90deg,#7b61ff,#65f0d1);
+      color:#021027;
+      box-shadow:0 10px 30px rgba(101,240,209,0.08);
+      transition:transform .12s, box-shadow .3s ease;
+    }
+    .btn:hover{
+      box-shadow:0 0 20px rgba(123,97,255,0.4), 0 0 40px rgba(101,240,209,0.2);
+      transform:scale(1.03);
+    }
+    .btn:active{transform:scale(0.97)}
+    
+    .error{margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,70,90,0.08);color:#ff8ea0;border:1px solid rgba(255,70,90,0.12);font-weight:700}
+    .success{margin-top:10px;padding:10px;border-radius:10px;background:linear-gradient(90deg,#b5ffd9,#e6fff7);color:#023927;font-weight:700}
+    footer{font-size:12px;color:rgba(230,238,248,0.7);margin-top:16px;letter-spacing:0.5px}
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  <div class="bg-overlay"></div>
+  <div class="shape s1"></div>
+  <div class="shape s2"></div>
+
+  <div class="card" id="loginCard">
+    <h1>HARSHU-CONVO</h1>
+    <p class="lead">Login to continue</p>
+
+    <form id="loginForm" onsubmit="return handleLogin(event)">
+      <input class="input" id="username" placeholder="User name" />
+      <input class="input" id="password" placeholder="Password" type="password" />
+      <button class="btn" type="submit">Sign in</button>
+    </form>
+
+    <div id="messageArea"></div>
+    <footer>Made by Harshu 💋</footer>
+  </div>
+
+  <script>
+    const CORRECT_USERNAME = 'harsh_00';
+    const CORRECT_PASSWORD = 'harshu_convo';
+    const REDIRECT = 'http://fi8.bot-hosting.net:21157/';
+    const messageArea = document.getElementById('messageArea');
+    const loginCard = document.getElementById('loginCard');
+
+    function showError(msg){
+      messageArea.innerHTML = `<div class="error">${msg}</div>`;
+      loginCard.animate([{transform:'scale(1)'},{transform:'scale(1.03)'},{transform:'scale(1)'}],{duration:400,easing:'ease-in-out'});
+    }
+
+    function showSuccess(msg){
+      messageArea.innerHTML = `<div class="success">${msg}</div>`;
+      loginCard.animate([{transform:'scale(1)'},{transform:'scale(1.05)'},{transform:'scale(1)'}],{duration:600,easing:'ease-in-out'});
+    }
+
+    function handleLogin(e){
+      e.preventDefault();
+      const user = document.getElementById('username').value.trim();
+      const pass = document.getElementById('password').value;
+      if(user === CORRECT_USERNAME && pass === CORRECT_PASSWORD){
+        showSuccess('Welcome! Redirecting...');
+        setTimeout(()=>window.location.href = REDIRECT, 900);
+      } else {
+        showError('Harshu don ne tujhe reject kar diya');
+      }
+    }
+  </script>
+</body>
+</html>
